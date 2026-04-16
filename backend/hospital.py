@@ -13,10 +13,6 @@ app.add_middleware(
 )
 
 
-
-
-
-
 @app.post("/save-user")
 async def save_user(request:Request):
     data = await request.json()

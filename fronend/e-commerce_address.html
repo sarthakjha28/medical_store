@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Address Page</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 30px 20px 50px;
+            font-family: Arial, sans-serif;
+            background: #eef2f7;
+            color: #111827;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 34px;
+            margin: 0 0 28px 0;
+            color: #1f2937;
+            letter-spacing: 0.2px;
+        }
+
+        /* White form card */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 90px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: min(820px, calc(100% - 28px));
+            height: calc(100% - 120px);
+            min-height: 760px;
+            background: white;
+            border-radius: 18px;
+            box-shadow: 0 12px 34px rgba(15, 23, 42, 0.08);
+            z-index: -1;
+        }
+
+        label,
+        input,
+        select,
+        p,
+        button {
+            max-width: 760px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        label {
+            display: block;
+            font-size: 15px;
+            font-weight: 600;
+            color: #1f2937;
+            margin-top: 18px;
+            margin-bottom: 7px;
+        }
+
+        input,
+        select {
+            display: block;
+            width: 100%;
+            box-sizing: border-box;
+            padding: 14px 16px;
+            font-size: 15px;
+            border: 1px solid #d1d5db;
+            border-radius: 12px;
+            background: #ffffff;
+            outline: none;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+            transform: translateY(-1px);
+        }
+
+        p {
+            font-size: 13px;
+            color: #6b7280;
+            margin-top: 6px;
+            margin-bottom: 0;
+        }
+
+        /* Fix City + State broken layout by overriding old inline styles */
+        #city,
+        #state {
+            width: 100% !important;
+            display: block !important;
+            margin-left: auto !important;
+            margin-right: auto !important;
+        }
+
+        button {
+            display: block;
+            margin-top: 30px;
+            padding: 14px 28px;
+            font-size: 16px;
+            font-weight: 700;
+            border: none;
+            border-radius: 999px;
+            background: #ffd814;
+            color: #111827;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+            transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        button:hover {
+            background: #f7ca00;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.16);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        @media (max-width: 860px) {
+            body {
+                padding: 24px 14px 40px;
+            }
+
+            h1 {
+                font-size: 28px;
+            }
+
+            body::before {
+                width: calc(100% - 18px);
+                left: 9px;
+                transform: none;
+                border-radius: 14px;
+            }
+        }
+    </style>
+
+    <script>
+        function placeOrder() {
+            alert("Order placed successfully");
+        }
+    </script>
+</head>
+
+<body>
+
+    <h1>Enter Delivery Address</h1>
+
+    <label>Country/Region</label>
+    <select id="country">
+        <option>India</option>
+    </select>
+
+    <label>Full name (First and Last name)</label>
+    <input type="text" id="fullname" placeholder="Enter full name">
+
+    <label>Mobile number</label>
+    <input type="text" id="mobile" placeholder="Enter mobile number">
+    <p>May be used to assist delivery</p>
+
+    <label>Pincode</label>
+    <input type="text" id="pincode" placeholder="Enter pincode">
+
+    <label>Flat, House no., Building, Company, Apartment</label>
+    <input type="text" id="flat" placeholder="Enter flat / house details">
+
+    <label>Area, Street, Sector, Village</label>
+    <input type="text" id="area" placeholder="Enter area / street / sector">
+
+    <label>Landmark</label>
+    <input type="text" id="landmark" placeholder="Enter landmark">
+
+    <label>Town/City</label>
+    <input type="text" id="city" placeholder="Enter city">
+
+    <label>State</label>
+    <select id="state">
+        <option>HARYANA</option>
+        <option>DELHI</option>
+        <option>UTTAR PRADESH</option>
+        <option>PUNJAB</option>
+        <option>RAJASTHAN</option>
+    </select>
+
+    <br><br>
+
+    <button onclick="placeOrder()">Place Order</button>
+
+
+
+</body>
+
+</html>

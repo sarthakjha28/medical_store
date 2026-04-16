@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Products</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #eaeded;
+            text-align: center;
+        }
+
+        h1 {
+            margin: 22px 0 6px 0;
+            font-size: 30px;
+            color: #0f1111;
+            text-align: center;
+        }
+
+        h3 {
+            margin: 0 0 20px 22px;
+            color: #565959;
+            font-size: 16px;
+            font-weight: normal;
+            text-align: left;
+        }
+
+        button {
+            padding: 9px 15px;
+            margin: 5px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: 0.2s ease;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+        }
+
+        #cartBtn {
+            background: #131921;
+            color: white;
+            font-weight: bold;
+        }
+
+        #cartBtn:hover {
+            background: #232f3e;
+        }
+
+        #productList {
+            width: 95%;
+            margin: 0 auto;
+            text-align: center;
+            padding-bottom: 30px;
+        }
+
+        .card {
+            display: inline-block;
+            width: 225px;
+            margin: 12px;
+            padding: 14px;
+            background: white;
+            border-radius: 10px;
+            vertical-align: top;
+            box-shadow: 0 2px 8px rgba(15, 17, 17, 0.08);
+            transition: 0.22s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+
+        .card::before {
+            content: "Best Pick";
+            position: relative;
+            top: 10px;
+            left: 10px;
+            background: #cc0c39;
+            color: white;
+            font-size: 11px;
+            font-weight: bold;
+            padding: 5px 8px;
+            border-radius: 4px;
+            letter-spacing: 0.3px;
+        }
+
+
+
+        .card img {
+            width: 100%;
+            height: 175px;
+            object-fit: contain;
+            background: #fff;
+            transition: transform 0.25s ease;
+        }
+
+        .card:hover img {
+            transform: scale(1.04);
+        }
+
+        .card b {
+            display: block;
+            margin-top: 12px;
+            font-size: 15px;
+            color: #0f1111;
+            line-height: 1.4;
+            height: 40px;
+            overflow: hidden;
+        }
+
+        .card b:hover {
+            color: #c7511f;
+        }
+
+        .price {
+            color: #b12704;
+            font-weight: bold;
+            margin: 8px 0 6px 0;
+            font-size: 19px;
+        }
+
+        .price::before {
+            content: "Deal Price ";
+            color: #565959;
+            font-size: 12px;
+            font-weight: normal;
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .cart-btn {
+            background: #ffd814;
+            color: #111;
+            font-weight: bold;
+            width: 100%;
+            margin: 8px 0 6px 0;
+            border-radius: 20px;
+        }
+
+        .cart-btn:hover {
+            background: #f7ca00;
+        }
+
+        .checkout-btn {
+            background: #ffa41c;
+            color: #111;
+            width: 100%;
+            border-radius: 20px;
+        }
+
+        .checkout-btn:hover {
+            background: #fa8900;
+        }
+
+        .search-box {
+            position: relative;
+            width: 400px;
+            margin: 20px auto;
+        }
+
+        .search-box input {
+            width: 80%;
+            padding: 14px 50px 14px 16px;
+            font-size: 16px;
+            border-radius: 25px;
+            border: 1px solid #ccc;
+            outline: none;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Button placed INSIDE input */
+        .search-btn {
+            position: absolute;
+            right: 12px;
+            top: 0;
+            height: 100%;
+            width: 40px;
+
+            border: none;
+            background: transparent;
+            cursor: pointer;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+
+
+
+
+    <script>
+        let cartCount = 0;
+
+        function goHome() {
+            window.location.href = "e-commerce(index).html";
+        }
+
+        function goToCart() {
+            window.location.href = "e-commerce_cart.html";
+        }
+
+        async function addToCart(productName, productPrice, productImage) {
+            let productData = {
+                name: productName,
+                price: productPrice,
+                images_url: productImage
+            };
+
+            let response = await fetch("http://127.0.0.1:8000/add-to-cart", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(productData)
+            });
+
+            let result = await response.json();
+
+            cartCount = cartCount + 1;
+            document.getElementById("cartBtn").innerHTML = "Cart (" + cartCount + ")";
+
+            alert(result.message);
+        }
+
+        function checkout(name, price, image) {
+            let product = {
+                name: name,
+                price: price,
+                image: image
+            };
+            localStorage.setItem("checkoutProduct", JSON.stringify(product)); // local stroage means store product in browser
+            window.location.href = "e-commerce_checkout.html"
+        }
+
+        async function loadProducts() {
+
+            let response = await fetch("http://127.0.0.1:8000/products");
+            let data = await response.json();
+
+            let output = "";
+
+            for (let i = 0; i < data.length; i++) {
+                output += `
+                <section class="card">
+                    <img src="${data[i].images_url}"><br><br>
+
+                    <b>${data[i].name}</b><br>
+
+                    <p class="price">₹${data[i].price}</p>
+
+                    <button class="cart-btn" onclick="addToCart('${data[i].name}', ${data[i].price}, '${data[i].images_url}')">Add to Cart</button>
+                    <button class="checkout-btn" onclick="checkout('${data[i].name}', ${data[i].price}, '${data[i].images_url}')">Checkout</button>                 </section>
+            `;
+            }
+
+            document.getElementById("productList").innerHTML = output;
+        }
+
+        
+
+    </script>
+
+    <script>
+        loadProducts();
+    </script>
+</head>
+
+<body>
+
+    <h1>Products</h1>
+    <section class="search-box">
+        <input type="text" id="searchInput" placeholder="Search products...">
+        <button onclick="searchProducts()" class="search-btn">
+            <img src="images/search_icon.jpg" style="width:18px; height:18px;">
+        </button>
+    </section>
+
+    <!-- we can also use  onkeyup  = search products but next time ..concept is new to me ..onkeyup mtlb user l likha to search
+    prdouct page refresh hoga ,,,la phir same thing....lap likha phir same thing -->
+
+    <button onclick="goHome()">Home</button>
+    <button id="cartBtn" onclick="goToCart()">Cart (0)</button>
+    <h3>Available Products</h3>
+
+    <section id="productList"></section>
+
+
+</body>
+
+</html>

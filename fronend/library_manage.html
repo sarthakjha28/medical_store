@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<title>
+    Library managment system
+</title>
+
+<head>
+    <script>
+        let books = [];
+
+        function addbook() {
+            let name = document.getElementById("bookname").value;
+            let author = document.getElementById("author").value;
+
+            if (name === "" || author === "") {
+                alert("please fill all the fields");
+                return;
+            }
+
+            let book = {
+                name: name,
+                author: author,
+                available: true
+            };
+
+            books.push(book);
+
+            // clear input
+            document.getElementById("bookname").value = "";
+            document.getElementById("author").value = "";
+
+            showbooks();
+        }
+
+        function showbooks() {
+            let output = "";
+
+            for (let i = 0; i < books.length; i++) {
+                output += "📘 " + books[i].name + " by " + books[i].author + " ";
+
+                if (books[i].available) {
+                    output += "✅ Available ";
+                    output += `<button onclick="issueBook(${i})">Issue</button>`;
+                } else {
+                    output += "❌ Issued ";
+                    output += `<button onclick="returnBook(${i})">Return</button>`;
+                }
+
+                output += "<br><br>";
+            }
+
+            document.getElementById("booklist").innerHTML = output;
+        }
+
+        function issueBook(index) {
+            books[index].available = false;
+            showbooks();
+        }
+
+        function returnBook(index) {
+            books[index].available = true;
+            showbooks();
+        }
+    </script>
+</head>
+
+<body>
+    <h1>📚 Library Management System</h1>
+
+    <Hr>
+    </Hr>
+
+    <h2>Add A Book</h2>
+    <label for="bookname">Book Name :</label>
+    <input type="text" id="bookname"><br><br>
+
+    <label for="author">Author :</label>
+    <input type="text" id="author"><br><br>
+
+    <button onclick="addbook()">Add Book</button>
+
+    <hr>
+    <p id="booklist"></p>
+</body>
+
+</html>
