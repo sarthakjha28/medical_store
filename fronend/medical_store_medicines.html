@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html>
+
+
+<header id="navbar">
+
+    <button id="home-btn" onclick="goHome()">Home</button>
+
+    <h2 id="logo">MediCare</h2>
+
+    <input type="text" placeholder="Search for medicines..." id="search">
+
+    <button id="cart-btn" onclick="goToCart()">Cart 🛒(1)</button>
+
+</header>
+
+<head>
+    <title>Medical Store</title>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            background: #f6f8fb;
+            color: #1f2937;
+        }
+
+        /* Navbar */
+        #navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+            padding: 14px 24px;
+            background: white;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        #logo {
+            margin: 0;
+            color: #0b3a6e;
+            font-size: 30px;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        #search {
+            flex: 1;
+            max-width: 620px;
+            padding: 13px 16px;
+            border: 1px solid #d7e0ea;
+            border-radius: 10px;
+            font-size: 15px;
+            outline: none;
+            background: #f8fbff;
+        }
+
+        #search:focus {
+            border-color: #10b981;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.08);
+        }
+
+        #home-btn,
+        #cart-btn {
+            padding: 11px 18px;
+            border: none;
+            border-radius: 10px;
+            background: #0d6efd;
+            color: white;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 14px;
+            transition: 0.25s;
+            box-shadow: 0 6px 16px rgba(13, 110, 253, 0.15);
+        }
+
+        #home-btn:hover,
+        #cart-btn:hover {
+            background: #084298;
+            transform: translateY(-1px);
+        }
+
+        /* Welcome line */
+        #topbar {
+            padding: 22px 28px 8px 28px;
+            font-weight: 700;
+            font-size: 20px;
+            color: #0b3a6e;
+        }
+
+        /* Offer strip */
+        #offer {
+            margin: 8px 28px 20px 28px;
+            background: linear-gradient(to right, #e7f8ef, #f2fbf7);
+            color: #15803d;
+            padding: 14px 18px;
+            border-radius: 12px;
+            font-weight: 700;
+            border: 1px solid #d8f1e3;
+            box-shadow: 0 4px 12px rgba(21, 128, 61, 0.06);
+        }
+
+        /* Medicines area */
+        #medicines {
+            padding: 10px 18px 30px 18px;
+            text-align: center;
+        }
+
+        /* Product card */
+        .card {
+            display: inline-block;
+            width: 235px;
+            background: white;
+            margin: 12px;
+            padding: 16px;
+            border-radius: 16px;
+            vertical-align: top;
+            text-align: left;
+            box-shadow: 0 6px 20px rgba(15, 23, 42, 0.08);
+            border: 1px solid #edf2f7;
+            transition: 0.25s;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 14px 28px rgba(15, 23, 42, 0.12);
+        }
+
+        /* Product image */
+        .card img {
+            width: 100%;
+            height: 180px;
+            object-fit: contain;
+            background: #f8fbff;
+            border-radius: 12px;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+
+        /* Medicine name */
+        .name {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1f2937;
+            margin: 14px 0 8px 0;
+            min-height: 42px;
+            line-height: 1.4;
+        }
+
+        /* Tag */
+        .tag {
+            display: inline-block;
+            margin-top: 6px;
+            padding: 6px 12px;
+            background: #f3f4f6;
+            color: #6b7280;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* Price */
+        .price {
+            margin-top: 16px;
+            margin-bottom: 0;
+            font-size: 18px;
+            font-weight: 800;
+            color: #111827;
+        }
+
+        /* Add button */
+        .add-btn {
+            width: 100%;
+            margin-top: 16px;
+            padding: 13px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(to right, #0f766e, #14b8a6);
+            color: white;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.25s;
+        }
+
+        .add-btn:hover {
+            opacity: 0.95;
+            transform: translateY(-1px);
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            #navbar {
+                flex-wrap: wrap;
+            }
+
+            #search {
+                order: 3;
+                width: 100%;
+                max-width: 100%;
+            }
+
+            .card {
+                width: 90%;
+                max-width: 320px;
+            }
+
+
+        }
+
+        /* Chat toggle button */
+        #chat-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 58px;
+            height: 58px;
+            border-radius: 50%;
+            border: none;
+            background: #0d6efd;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            z-index: 999;
+        }
+
+        /* Chat box */
+        #chat-box {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            width: 320px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
+            padding: 14px;
+            display: none;
+            z-index: 999;
+            text-align: left;
+        }
+
+        /* Chat title */
+        #chat-box h3 {
+            margin: 0 0 10px 0;
+            color: #0b3a6e;
+        }
+
+        /* Messages area */
+        #chat-messages {
+            height: 220px;
+            overflow-y: auto;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 10px;
+            background: #f8fbff;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        #chat-messages p {
+            margin: 8px 0;
+        }
+
+        /* Input */
+        #chat-input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid #d1d5db;
+            outline: none;
+            margin-bottom: 8px;
+        }
+
+        /* Send button */
+        #send-btn {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 10px;
+            background: #10b981;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        #send-btn:hover {
+            background: #059669;
+        }
+    </style>
+
+    <script>
+        window.onload = function () {
+            let name = localStorage.getItem("username");
+
+            if (name) {
+                document.getElementById("topbar").innerText = "Hi " + name;
+            }
+
+            loadMedicines();
+            updateCartCount();
+        };
+
+        async function loadMedicines() {
+            let response = await fetch("http://127.0.0.1:8000/medicines");
+            let data = await response.json();
+
+            let output = "";
+
+            for (let i = 0; i < data.length; i++) {
+                output += `
+                    <section class="card">
+                        <img src="${data[i].images_url}">
+                        <p class="name">${data[i].name}</p>
+                        <span class="tag">Medicine</span>
+                        <p class="price">₹${data[i].price}</p>
+                        <button class="add-btn" onclick='addToCart("${data[i].name}", ${data[i].price}, "${data[i].images_url}")'>Add</button>
+                    </section>
+                `;
+            }
+
+            document.getElementById("medicines").innerHTML = output;
+        }
+
+        async function addToCart(name, price, images_url) {
+            let data = {
+                name: name,
+                price: price,
+                images_url: images_url
+            };
+
+            let response = await fetch("http://127.0.0.1:8000/add-to-cart", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            });
+
+            let result = await response.json();
+
+            alert(result.message);
+            updateCartCount();
+        }
+
+        function goToCart() {
+            window.location.href = "medical_store_cart.html";
+        }
+
+        function goHome() {
+            window.location.href = "medical_store_index.html";
+        }
+
+        async function updateCartCount() {
+            let response = await fetch("http://127.0.0.1:8000/cart");
+            let data = await response.json();
+
+            document.getElementById("cart-btn").innerText = "Cart (" + data.length + ")";
+
+        }
+
+        // Open / Close chat
+        function toggleChat() {
+            let box = document.getElementById("chat-box");
+            box.style.display = box.style.display === "block" ? "none" : "block";
+        }
+
+        // Send message
+        function sendMessage() {
+
+            let input = document.getElementById("chat-input");
+            let msg = input.value.toLowerCase().trim(); // input value = fever 
+
+            if (msg === "") return;
+
+            let chat = document.getElementById("chat-messages");
+
+            // Show user message
+            chat.innerHTML += `<p><b>You:</b> ${msg}</p>`; // if u typed fever chat ui shows ->you: fever
+
+            let reply = "";
+
+            // Local AI logic
+            if (msg.includes("fever")) {
+                reply = "For fever, Paracetamol (like Dolo 650) is commonly used. Stay hydrated and rest.";
+            }
+            else if (msg.includes("headache")) {
+                reply = "For headache, Crocin or Dolo 650 may help. Avoid stress and take proper rest.";
+            }
+            else if (msg.includes("cold")) {
+                reply = "For cold, you can take antihistamines and drink warm fluids.";
+            }
+            else if (msg.includes("cough")) {
+                reply = "For cough, syrups like Benadryl may help. Drink warm water.";
+            }
+            else if (msg.includes("stomach")) {
+                reply = "For stomach pain, antacids may help. Avoid spicy food.";
+            }
+
+            else if (msg.includes("vomit") || msg.includes("vomiting")) {
+                reply = "For vomiting, stay hydrated and take ORS. Medicines like Ondansetron may help.";
+            }
+            else if (msg.includes("diarrhea") || msg.includes("loose motion")) {
+                reply = "For loose motion, take ORS and stay hydrated. Avoid oily food.";
+            }
+            else if (msg.includes("gas") || msg.includes("acidity")) {
+                reply = "For acidity, antacids like Gelusil or Digene may help.";
+            }
+            else if (msg.includes("body pain")) {
+                reply = "For body pain, Paracetamol or Ibuprofen may help. Take rest.";
+            }
+            else if (msg.includes("allergy")) {
+                reply = "For allergies, antihistamines like Cetirizine may help.";
+            }
+            else if (msg.includes("sore throat")) {
+                reply = "For sore throat, warm water gargles and lozenges can help.";
+            }
+            else if (msg.includes("tooth pain") || msg.includes("toothache")) {
+                reply = "For tooth pain, pain relievers may help. Visit a dentist if severe.";
+            }
+            else if (msg.includes("ear pain")) {
+                reply = "For ear pain, avoid inserting anything. Consult a doctor if it continues.";
+            }
+            else if (msg.includes("eye pain") || msg.includes("eye irritation")) {
+                reply = "For eye irritation, use clean water wash. Avoid touching eyes.";
+            }
+            else if (msg.includes("burn")) {
+                reply = "For minor burns, apply cold water and antiseptic cream.";
+            }
+            else if (msg.includes("cut") || msg.includes("wound")) {
+                reply = "Clean the wound and apply antiseptic like Dettol or Savlon.";
+            }
+            else if (msg.includes("infection")) {
+                reply = "For infections, proper diagnosis is needed. Avoid self-medication.";
+            }
+            else if (msg.includes("weakness")) {
+                reply = "For weakness, take proper diet and multivitamins.";
+            }
+            else if (msg.includes("vitamin")) {
+                reply = "Vitamin supplements like Vitamin C and D3 can help improve immunity.";
+            }
+            else if (msg.includes("bp") || msg.includes("blood pressure")) {
+                reply = "For BP issues, regular monitoring and doctor consultation is important.";
+            }
+            else if (msg.includes("sugar") || msg.includes("diabetes")) {
+                reply = "For diabetes, maintain diet control and consult your doctor regularly.";
+            }
+            else if (msg.includes("sleep") || msg.includes("insomnia")) {
+                reply = "For better sleep, avoid screens at night and maintain a routine.";
+            }
+
+            else {
+                reply = "I can help with common issues like fever, cold, headache, stomach pain, etc. Please consult a doctor for serious conditions.";
+            }
+
+            // Show bot reply
+            setTimeout(() => {
+                chat.innerHTML += `<p><b>Bot:</b> ${reply}</p>`;
+                chat.scrollTop = chat.scrollHeight;
+            }, 500);
+
+            input.value = "";
+        }
+
+
+    </script>
+</head>
+
+<body>
+
+    <h1>Medical Store 💊</h1>
+
+    <p id="topbar"></p>
+
+    <section id="medicines"></section>
+
+    <!-- <button id="home-btn" onclick="goHome()">Home</button> -->
+
+    <!-- Chat Button -->
+    <button id="chat-toggle" onclick="toggleChat()">💬</button>
+
+    <!-- Chat Box -->
+    <section id="chat-box">
+        <h3>AI Agent</h3>
+
+        <section id="chat-messages">
+            <p><b>Bot:</b> Hello 👋 I am your pharmacy assistant.</p>
+            <p><b>Bot:</b> Ask about fever, headache, cold, cough, or stomach pain.</p>
+        </section>
+
+        <input type="text" id="chat-input" placeholder="Write your message...">
+        <button id="send-btn" onclick="sendMessage()">Send</button>
+    </section>
+
+
+
+</body>
+
+</html>

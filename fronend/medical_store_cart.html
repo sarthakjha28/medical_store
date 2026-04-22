@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>My Cart</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(to bottom, #f8fbff, #eef4fb);
+            color: #1f2937;
+        }
+
+        /* Header */
+        h1 {
+            margin: 0;
+            padding: 18px;
+            background: linear-gradient(to right, #0b3a6e, #0d6efd);
+            color: white;
+            text-align: center;
+            font-size: 30px;
+            font-weight: 800;
+            box-shadow: 0 4px 16px rgba(13, 110, 253, 0.15);
+        }
+
+        /* Username */
+        #welcome,
+        body p:first-of-type {
+            text-align: center;
+            margin: 18px 0 10px;
+            font-size: 20px;
+            font-weight: 700;
+            color: #0b3a6e;
+        }
+
+        /* Back button */
+        #back-btn {
+            display: block;
+            margin: 10px auto;
+            padding: 10px 18px;
+            border-radius: 10px;
+            border: 1px solid #d7e0ea;
+            background: white;
+            color: #0b3a6e;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        #back-btn:hover {
+            background: #eff6ff;
+        }
+
+        /* Total box */
+        #total {
+            display: block;
+            width: fit-content;
+            margin: 16px auto 26px;
+            padding: 14px 24px;
+            background: white;
+            border-radius: 16px;
+            font-size: 24px;
+            font-weight: 900;
+            color: #0b3a6e;
+            box-shadow: 0 10px 22px rgba(15, 23, 42, 0.08);
+        }
+
+        /* Cart layout */
+        #cart_items {
+            width: 95%;
+            max-width: 1200px;
+            margin: auto;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 24px;
+        }
+
+        /* Card */
+        .card {
+            width: 260px;
+            background: white;
+            border-radius: 20px;
+            padding: 18px;
+            text-align: center;
+            box-shadow: 0 14px 30px rgba(15, 23, 42, 0.08);
+            transition: 0.25s;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 18px 34px rgba(15, 23, 42, 0.12);
+        }
+
+        /* Image */
+        .card img {
+            width: 100%;
+            height: 180px;
+            object-fit: contain;
+            background: #f8fbff;
+            border-radius: 14px;
+            padding: 10px;
+        }
+
+        /* Name */
+        .card h3,
+        .name {
+            margin: 14px 0 6px;
+            font-size: 18px;
+            font-weight: 800;
+        }
+
+        /* Price & text */
+        .card p {
+            margin: 5px 0;
+            font-size: 14px;
+            color: #475569;
+        }
+
+        /* Quantity section */
+        .qty-box {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin: 12px 0;
+        }
+
+        /* + - buttons */
+        button[onclick*="increaseQty"],
+        button[onclick*="decreaseQty"] {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: 1px solid #dbe4ee;
+            background: white;
+            color: #0d6efd;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button[onclick*="increaseQty"]:hover,
+        button[onclick*="decreaseQty"]:hover {
+            background: #eef6ff;
+        }
+
+        /* Remove */
+        button[onclick*="removeItem"] {
+            width: 100%;
+            margin-top: 10px;
+            padding: 12px;
+            border-radius: 10px;
+            border: none;
+            background: linear-gradient(to right, #ef4444, #dc2626);
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        button[onclick*="removeItem"]:hover {
+            opacity: 0.95;
+        }
+
+        /* Bottom buttons FIXED CENTER */
+        #home-btn,
+        #pay-btn {
+            display: block;
+            margin: 12px auto;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        /* Home */
+        #home-btn {
+            background: white;
+            border: 1px solid #d7e0ea;
+            color: #0b3a6e;
+        }
+
+        /* Payment */
+        #pay-btn {
+            background: linear-gradient(to right, #10b981, #06d6a0);
+            color: white;
+            box-shadow: 0 8px 18px rgba(16, 185, 129, 0.2);
+        }
+
+        #pay-btn:hover {
+            opacity: 0.95;
+        }
+
+        /* Empty */
+        #empty {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 22px;
+            font-weight: 700;
+            color: #64748b;
+        }
+
+        /* Remove hr */
+        hr {
+            display: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .card {
+                width: 90%;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+
+    <script>
+        window.onload = function () {
+            let name = localStorage.getItem("username");
+
+            if (name) {
+                document.getElementById("topbar").innerText = "Hi " + name;
+            }
+
+            loadCart();
+        };
+
+        async function loadCart() {
+
+
+            let response = await fetch("http://127.0.0.1:8000/cart");
+            let data = await response.json();
+            //console.log(data);
+
+            let output = "";
+
+            let total = 0;
+
+            if (data.length === 0) {
+                document.getElementById("cart_items").innerHTML = "<p id='empty'>Your cart is empty</p>";
+                document.getElementById("total").innerText = "";
+                return;
+            }
+
+            for (let i = 0; i < data.length; i++) {
+
+
+                total += data[i].price * data[i].quantity;
+
+                output += `
+                    <section class="card">
+                        <img src="${data[i].images_url}">
+
+                        <p class="name">${data[i].name}</p>
+
+                        <p class="price">₹${data[i].price}</p>
+
+                        <p class="price">Quantity: ${data[i].quantity}</p>
+
+                        <p>
+                            <button onclick="decreaseQty('${data[i].name}')">-</button>
+                            <b>${data[i].quantity}</b>
+                            <button onclick="increaseQty('${data[i].name}')">+</button>
+                        </p>
+                        
+                        <button class="remove-btn" onclick="removeItem('${data[i].name}')">Remove</button>
+                    </section>
+                `;
+            }
+
+            document.getElementById("cart_items").innerHTML = output;
+            document.getElementById("total").innerText = "Total: ₹" + total;
+        }
+
+
+
+
+        async function removeItem(name) {
+            let data = {
+                name: name
+            };
+
+            let response = await fetch("http://127.0.0.1:8000/remove-item", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            });
+
+            let result = await response.json();
+
+            alert(result.message);
+
+            loadCart();
+        }
+
+        function goBack() {
+            window.location.href = "medical_store_medicines.html";
+        }
+
+        function goHome() {
+            window.location.href = "medical_store_index.html";
+        }
+
+
+        async function increaseQty(name) {
+
+            let data = { name: name };
+
+            await fetch("http://127.0.0.1:8000/increase-qty", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            });
+
+            loadCart();
+
+        }
+
+        async function decreaseQty(name) {
+
+            let data = { name: name };
+
+            await fetch("http://127.0.0.1:8000/decrease-qty", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            });
+
+            loadCart();
+
+
+        }
+
+        function goToPayment() {
+            window.location.href = "medical_store_payment.html";
+        }
+
+
+    </script>
+</head>
+
+<body>
+
+    <h1>My Cart 🛒</h1>
+
+    <p id="topbar"></p>
+
+    <div style="text-align:center;">
+        <button id="back-btn" onclick="goBack()">Back to Store</button>
+    </div>
+
+    <p id="total"></p>
+
+    <section id="cart_items"></section>
+
+    <button id="home-btn" onclick="goHome()">Home</button>
+    <button id="pay-btn" onclick="goToPayment()">Proceed to Payment</button>
+
+
+
+</body>
+
+</html>

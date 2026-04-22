@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Medical Store Register</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            background: #f3f6fb;
+        }
+
+        .left {
+            width: 50%;
+            background: url("images/register.jpg");
+            background-size: 80%;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-color: #f3f6fb;
+        }
+
+        .right {
+            width: 50%;
+            background: #f3f6fb;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            box-sizing: border-box;
+        }
+
+        .register-card {
+            width: 420px;
+            background: white;
+            border-radius: 24px;
+            padding: 34px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.10);
+            text-align: center;
+        }
+
+        .brand {
+            font-size: 18px;
+            font-weight: bold;
+            color: #0b3a6e;
+            margin-bottom: 14px;
+        }
+
+        .welcome {
+            font-size: 34px;
+            font-weight: bold;
+            color: #0b3a6e;
+            margin-bottom: 8px;
+        }
+
+        .line {
+            width: 70px;
+            height: 4px;
+            background: #10b981;
+            border-radius: 10px;
+            margin: 14px auto 22px;
+        }
+
+        .subtitle {
+            color: #64748b;
+            margin-bottom: 24px;
+            font-size: 17px;
+        }
+
+        input {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 14px;
+            border-radius: 30px;
+            border: 1px solid #dbe4ee;
+            outline: none;
+            box-sizing: border-box;
+            font-size: 15px;
+        }
+
+        input:focus {
+            border-color: #10b981;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            border-radius: 30px;
+            border: none;
+            background: linear-gradient(to right, #10b981, #06d6a0);
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            opacity: 0.95;
+        }
+
+        #msg {
+            min-height: 22px;
+            margin-top: 12px;
+            font-weight: 600;
+        }
+
+        .bottom-text {
+            margin-top: 18px;
+            color: #64748b;
+            font-size: 15px;
+        }
+
+        .bottom-text a {
+            color: #0b3a6e;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        @media (max-width: 950px) {
+            body {
+                flex-direction: column;
+                height: auto;
+                overflow: auto;
+            }
+
+            .left,
+            .right {
+                width: 100%;
+            }
+
+            .left {
+                height: 320px;
+            }
+
+            .right {
+                padding: 30px 20px;
+            }
+
+            .register-card {
+                width: 100%;
+                max-width: 420px;
+            }
+
+            .welcome {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <section class="left"></section>
+
+    <section class="right">
+        <section class="register-card">
+            <div class="brand">💊 Pharmacy</div>
+            <div class="welcome">Create Account</div>
+            <div class="line"></div>
+            <div class="subtitle">Please register to continue</div>
+
+            <input type="text" id="name" placeholder="Enter Name">
+            <input type="text" id="email" placeholder="Enter Email">
+            <input type="password" id="password" placeholder="Enter Password">
+
+            <button onclick="register()">Sign Up</button>
+
+            <p id="msg"></p>
+
+            <div class="bottom-text">
+                Already have an account?
+                <a href="medical_store_login.html">Log In</a>
+            </div>
+        </section>
+    </section>
+
+    <script>
+        async function register() {
+            let name = document.getElementById("name").value;
+            let email = document.getElementById("email").value;
+            let password = document.getElementById("password").value;
+
+            if (!name || !email || !password) {
+                document.getElementById("msg").innerText = "All fields required";
+                document.getElementById("msg").style.color = "red";
+                return;
+            }
+
+            let data = {
+                name: name,
+                email: email,
+                password: password
+            };
+
+            let response = await fetch("http://127.0.0.1:8000/register", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            });
+
+            let result = await response.json();
+
+            document.getElementById("msg").innerText = result.message;
+            document.getElementById("msg").style.color = "green";
+
+            if (result.message === "User registered successfully") {
+                localStorage.setItem("username", name);
+
+                setTimeout(() => {
+                    window.location.href = "medical_store_medicines.html";
+                }, 2000);
+            }
+        }
+    </script>
+
+</body>
+
+</html>
